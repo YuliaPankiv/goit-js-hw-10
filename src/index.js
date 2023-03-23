@@ -2,7 +2,8 @@ import './css/styles.css';
 import debounce from 'lodash.debounce';
 import { fetchCountries } from './modules/fetchCountries';
 import Notiflix from 'notiflix';
-
+import { markupList } from './modules/markupList';
+import { markupCountryInfo } from './modules/markupCountryInfo';
 const DEBOUNCE_DELAY = 300;
 
 const refs = {
@@ -29,7 +30,6 @@ function onSearch(event) {
         clearPage();
         return;
       }
-
       if (data.length === 1) {
         renderCountryInfo(data[0]);
         return;
@@ -44,25 +44,14 @@ function onSearch(event) {
 }
 
 function renderCountryList(countries) {
-  const markup = countries
-    .map(country => {
-      return `<li><img src="${country.flag}" alt="" width="50"> ${country.nativeName}</li>`;
-    })
-    .join('');
+  const markup = markupList(countries);
+
   refs.countryList.innerHTML = markup;
   refs.countryInfo.innerHTML = '';
 }
 
 function renderCountryInfo(country) {
-  const markup = `
-    <h2>${country.name}</h2>
-    <p><strong>Capital:</strong> ${country.capital}</p>
-    <p><strong>Population:</strong> ${country.population}</p>
-    <div><strong>Languages:</strong> ${country.languages
-      .map(language => language.name)
-      .join(', ')}</div>
-    <div><img src="${country.flag}" alt="${country.name}" width="200"></div>
-  `;
+  const markup = markupCountryInfo(country);
   refs.countryInfo.innerHTML = markup;
   refs.countryList.innerHTML = '';
 }
